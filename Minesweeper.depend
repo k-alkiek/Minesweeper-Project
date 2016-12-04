@@ -1,0 +1,20 @@
+# depslib dependency file v1.0
+1480861837 source:c:\users\khaled\desktop\cp\minesweeper\main.c
+	<stdio.h>
+	<stdlib.h>
+	"cells.h"
+
+1480861847 source:c:\users\khaled\desktop\cp\minesweeper\cells.c
+
+1480861768 c:\users\khaled\desktop\cp\minesweeper\cells.h
+
+1480879156 source:c:\users\khaled\desktop\minesweeper project\cells.c
+
+1480879402 source:c:\users\khaled\desktop\minesweeper project\main.c
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	"cells.h"
+
+1480863629 c:\users\khaled\desktop\minesweeper project\cells.h
+
