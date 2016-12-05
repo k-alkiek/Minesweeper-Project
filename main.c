@@ -6,6 +6,7 @@
 
 bool startup(void);
 
+int r,c;
 struct cell grid[100][100] ;
 
 int main(void){
@@ -21,16 +22,16 @@ bool startup(void){
     do {
     printf("Do you want to start a new game (n), load a previous game (l) or exit (x)?\n");
     char input;
+    fflush(stdin);
     scanf("%c",&input);
     switch(input){
 
-    case 'n': {/*game();*/ break; }
+    case 'n': {getSize(); gridInit(); draw(); break; }
     case 'l': {/*load();*/ break; }
-    case 'x': return 1;
+    case 'x': return 1; break;
     default : {
-    printf("Invalid entry, please try again\n");
+    printf("Invalid entry, please try again\n"); break;
     }
-
 
     }
 
