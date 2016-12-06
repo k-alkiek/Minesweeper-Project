@@ -1,7 +1,9 @@
-#ifndef cellsheader
-#define cellsheader
+#ifndef GAMEHEADER
+#define GAMEHEADER
 
 
 bool startup(void);
+bool play();
+
 
 #endif

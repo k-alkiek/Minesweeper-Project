@@ -1,5 +1,5 @@
-#ifndef cellsheader
-#define cellsheader
+#ifndef CELLSHEADER
+#define CELLSHEADER
 
 
 struct cell{
