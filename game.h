@@ -1,9 +1,10 @@
 #ifndef GAMEHEADER
 #define GAMEHEADER
 
-
-bool startup(void);
+void clearScreen(void);
 bool play();
+bool startup();
+
 
 
 #endif
