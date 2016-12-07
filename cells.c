@@ -13,11 +13,11 @@ struct cell grid[100][100];
 void getSize() {
 
     do{
+        // Add "Wrong entry" and clear screen
     puts("Please enter the grid dimensions in the form of : x y");
     fflush(stdin);
     scanf("%d %d", &r, &c);
     }while(r<2 || r>MAX_SIZE || c<2 || c>MAX_SIZE);
-    printf("The game will have %d rows and %d columns\n", r, c);
 }
 
 
@@ -64,7 +64,7 @@ void putBlank(int row, int col){
     CELL.discovered = 0;
     CELL.mined = 0;
     CELL.number = 0;
-    CELL.flag = 0;
+    CELL.flagged = 0;
     CELL.question = 0;
     CELL.show = 'X';
 }

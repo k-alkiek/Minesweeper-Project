@@ -6,7 +6,7 @@ struct cell{
     int discovered;
     int mined;
     int number;
-    int flag;
+    int flagged;
     int question;
     char show;
 };
@@ -14,5 +14,6 @@ struct cell{
 void getSize();
 void draw();
 void gridInit();
+void putBlank(int row, int col);
 
 #endif
