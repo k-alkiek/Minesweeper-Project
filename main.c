@@ -6,8 +6,8 @@
 #include "game.h"
 
 
-int r,c;
-struct cell grid[100][100] ;
+
+
 
 int main(void){
 
