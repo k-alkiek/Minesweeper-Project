@@ -2,11 +2,13 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <time.h>
 #include "cells.h"
 #include "game.h"
 
 #define CELL(row,col) grid[row][col]
 
+time_t timeStart;  //variable to hold time value when the game starts. initialized in startup()
 bool messageFlag = 0;
 char message[100];
 int flags = 0 ;
@@ -112,12 +114,15 @@ void unmarkCell(int row, int col) {
 
 bool play(){
 
+    time_t timeNow;
     int rowIn, colIn;
     bool wrongInput = 0;
     char action;
     do
     {
-        clearScreen(); printf("\n");
+    time(&timeNow); //get current time
+    //double seconds = difftime(timeNow,timeStart);
+        clearScreen(); printf("   Time: %.f\n\n",difftime(timeNow,timeStart)); //difftime returns difference between two times
         draw();
         if(wrongInput){
             puts("Wrong entry.");
@@ -172,6 +177,7 @@ bool startup(void){
         {
             getSize();
             gridInit();
+            time(&timeStart); //initialize timeStart as soon as the game starts
             play();
             break;
         }
