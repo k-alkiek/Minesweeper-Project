@@ -4,7 +4,7 @@
 #include "cells.h"
 
 #define MAX_SIZE 100
-#define CELL grid[row][col]
+#define CELL(row,col) grid[row][col]
 
 
 int r,c; //rows and columns
@@ -46,7 +46,7 @@ void draw() {
             printf("%2d ", i);   //print row number
         for (j = 0 ; j < c ; j++ ) {
             if(j==0) printf("|"); //print first vertical break in the row
-            printf("%2c |",grid[i][j].show); //print cell's char and a vertical break
+            printf("%2c |",CELL(i,j).show); //print cell's char and a vertical break
         }
         printf("\n"); //new line after each row
         for(j=0; j<c; j++){ //horizontal break after each row
@@ -61,10 +61,10 @@ void draw() {
 
 void putBlank(int row, int col){
 //    grid[row][col] = { 0, 0, 0, 0, 0, 'X'};
-    CELL.discovered = 0;
-    CELL.mined = 0;
-    CELL.number = 0;
-    CELL.flagged = 0;
-    CELL.question = 0;
-    CELL.show = 'X';
+    CELL(row,col).discovered = 0;
+    CELL(row,col).mined = 0;
+    CELL(row,col).number = 0;
+    CELL(row,col).flagged = 0;
+    CELL(row,col).question = 0;
+    CELL(row,col).show = 'X';
 }

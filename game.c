@@ -5,7 +5,7 @@
 #include "cells.h"
 #include "game.h"
 
-#define CELL grid[row][col]
+#define CELL(row,col) grid[row][col]
 
 extern int r,c;
 extern struct cell grid[100][100];
@@ -42,11 +42,11 @@ void clearScreen(void){
 
 void openCell(int row, int col) {
     //if(CELL.discovered)
-    if(CELL.flagged || CELL.question){
+    if(CELL(row,col).flagged || CELL(row,col).question){
     puts("The cell is marked. Unmark it first by the action 'u'");
     return;
     }
-    if (CELL.mined) {
+    if (CELL(row,col).mined) {
         gameState = 0;//TODO: change gameState to enum laeter
     }
 }
