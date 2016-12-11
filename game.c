@@ -28,6 +28,7 @@ bool validAction(char input) {
         case 'f':
         case 'Q':
         case 'q':
+        case '?':
         case 'U':
         case 'u':
         case 'S':
@@ -54,9 +55,14 @@ void openCell(int row, int col) {
     }
 }
 void flagCell(int row, int col) {
-    if (CELL(row,col).flagged == 1) {
+    if (CELL(row,col).discovered == 1) {
+        strcpy(message, "The cell is already opened.");
         messageFlag = 1;
-        strcpy (message,"The cell is already flagged. You can unmark it using the action 'u'");
+        return;
+    }
+    if (CELL(row,col).flagged || CELL(row,col).question == 1) {
+        messageFlag = 1;
+        strcpy (message,"The cell is already marked. You can unmark it using the action 'u'");
         return;
     }
     CELL(row,col).flagged = 1;
@@ -64,7 +70,45 @@ void flagCell(int row, int col) {
     flags++;
     return;
 }
+void questionCell(int row, int col) {
+    if (CELL(row,col).discovered == 1) {
+        strcpy(message, "The cell is already opened.");
+        messageFlag = 1;
+        return;
+    }
+    if (CELL(row,col).question || CELL(row,col).flagged == 1) {
+        messageFlag = 1;
+        strcpy (message,"The cell is already marked. You can unmark it using the action 'u'");
+        return;
+    }
+    CELL(row,col).question = 1;
+    CELL(row,col).show = '?' ;
+    return;
+}
+void unmarkCell(int row, int col) {
+    if (CELL(row,col).discovered == 1) {
+        strcpy(message, "The cell is already opened.");
+        messageFlag = 1;
+        return;
+    }
+    if ((CELL(row,col).question || CELL(row,col).flagged) == 0) {
+        strcpy(message, "The cell is already unmarked.");
+        messageFlag = 1;
+        return;
+    }
+    if (CELL(row,col).question == 1) {
+        CELL(row,col).question = 0;
+        CELL(row,col).show = 'X' ;
+        return;
+    }
+    if (CELL(row,col).flagged == 1) {
+        CELL(row,col).flagged = 0;
+        CELL(row,col).show = 'X' ;
+        flags--;
+        return;
+    }
 
+}
 
 bool play(){
 
@@ -96,11 +140,12 @@ bool play(){
             case 'o': {openCell(rowIn, colIn); break;}
             case 'F':
             case 'f': {flagCell(rowIn, colIn); break;}
-            case 'Q':       //TODO : add
-            case 'q':       //functions
-            case 'U':       //later
-            case 'u':
-            case 'S':
+            case 'Q':
+            case '?':
+            case 'q': {questionCell(rowIn, colIn); break;}
+            case 'U':
+            case 'u': {unmarkCell(rowIn, colIn); break;}
+            case 'S':  // add functions later
             case 's': break;
     }
 
