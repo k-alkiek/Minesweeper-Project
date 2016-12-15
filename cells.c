@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "cells.h"
 
@@ -7,8 +8,10 @@
 #define CELL(row,col) grid[row][col]
 
 
-int r,c; //rows and columns
+int r,c,mines; //rows and columns
 struct cell grid[100][100];
+extern time_t timeStart;
+
 
 void getSize() {
 
@@ -18,6 +21,7 @@ void getSize() {
     fflush(stdin);
     scanf("%d %d", &r, &c);
     }while(r<2 || r>MAX_SIZE || c<2 || c>MAX_SIZE);
+    mines = 1+(r*c)/10;     //get number of mines in the game
 }
 
 
@@ -67,4 +71,31 @@ void putBlank(int row, int col){
     CELL(row,col).flagged = 0;
     CELL(row,col).question = 0;
     CELL(row,col).show = 'X';
+}
+
+void putMines(){
+    int minesPlaced = 0;
+    srand((unsigned)timeStart);
+    while(minesPlaced < mines){ //keep adding mines till it reaches the variable
+        int row = rand() % r;
+        int col = rand() % c;
+        if(!(CELL(row,col).mined) && !(CELL(row,col).discovered) ){ //only add mine in a cell if it does not already have a mine and is not already discovered (first open)
+                CELL(row,col).mined = 1;
+        }
+    }
+}
+
+void putNumbers(){
+    for(int row=0; row<r; row++){
+        for(int col=0; col<c; col++){
+            if(CELL(row,col).mined){
+                for(int i = row-1; i<=row+1; i++){
+                    for(int j=col-1; j<=col+1; j++){
+                        if(inRange(r,row) && inRange(c,col) && !(CELL(row,col).mined) ) //add numbers only to unmined cells inside the boundaries
+                            (CELL(i,j).number) ++;
+                    }
+                }
+            }
+        }
+    }
 }

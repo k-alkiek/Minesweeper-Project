@@ -8,9 +8,10 @@
 
 1480861768 c:\users\khaled\desktop\cp\minesweeper\cells.h
 
-1481446515 source:c:\users\khaled\desktop\minesweeper project\cells.c
+1481811578 source:c:\users\khaled\desktop\minesweeper project\cells.c
 	<stdio.h>
 	<stdlib.h>
+	<time.h>
 	"cells.h"
 
 1481111855 source:c:\users\khaled\desktop\minesweeper project\main.c
@@ -44,14 +45,16 @@
 	<stdbool.h>
 	"cells.h"
 
-1481132720 source:c:\users\khaled\desktop\minesweeper project\game.c
+1481448658 source:c:\users\khaled\desktop\minesweeper project\game.c
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
+	<string.h>
+	<time.h>
 	"cells.h"
 	"game.h"
 
-1481128852 c:\users\khaled\desktop\minesweeper project\game.h
+1481812329 c:\users\khaled\desktop\minesweeper project\game.h
 
 1481436267 source:c:\users\a2hp11\desktop\minesweeper\cells.c
 	<stdio.h>

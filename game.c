@@ -17,8 +17,8 @@ extern struct cell grid[100][100];
 
 bool gameState=1; //TODO: change to enum later, change in play() and openCell()
 
-bool inRange(int max, int input){
-    if(input >=0 && input < max) return 1;
+bool inRange(int maximum, int input){
+    if(input >=0 && input < maximum) return 1;
     else return 0;
 }
 
@@ -47,10 +47,12 @@ void clearScreen(void){
 }
 
 void openCell(int row, int col) {
+    static bool initialOpen = 1;
     //if(CELL.discovered)
     if(CELL(row,col).flagged || CELL(row,col).question){
-    puts("The cell is marked. Unmark it first by the action 'u'");
-    return;
+        messageFlag = 1;
+        strcpy (message,"The cell is already marked. You can unmark it using the action 'u'");
+        return;
     }
     if (CELL(row,col).mined) {
         gameState = 0;//TODO: change gameState to enum later
