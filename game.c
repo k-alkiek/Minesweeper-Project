@@ -48,12 +48,13 @@ void clearScreen(void){
 
 void openEmptyCell(int row, int col) {
     int i, j;
-        for(i = row-1 ; i <= row+1 ; i++){
-            for (j = col-1 ; j <= col+1; j++) {
-                if (i<r && j < c && i>=0 && j>=0 && !CELL(i,j).discovered)
-                    openCell(i,j);
-            }
+    for(i = row-1 ; i <= row+1 ; i++){
+        for (j = col-1 ; j <= col+1; j++) {
+            if (i<r && j < c && i>=0 && j>=0 && !CELL(i,j).discovered)
+                openCell(i,j);
         }
+    }
+    messageFlag = 0;
     return;
 }
 
