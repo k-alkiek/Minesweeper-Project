@@ -15,5 +15,7 @@ void getSize();
 void draw();
 void gridInit();
 void putBlank(int row, int col);
+void putMines();
+void putNumbers();
 
 #endif

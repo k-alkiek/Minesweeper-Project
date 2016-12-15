@@ -48,14 +48,40 @@ void clearScreen(void){
 
 void openCell(int row, int col) {
     static bool initialOpen = 1;
+    if(initialOpen){
+        initialOpen = 0;
+        CELL(row,col).discovered = 1;
+        putMines();
+        putNumbers();
+        if(CELL(row,col).number) CELL(row,col).show = (char)(48 + CELL(row,col).number);
+        else CELL(row,col).show = ' ';
+        return ;
+    }
     //if(CELL.discovered)
+    if(CELL(row,col).discovered && !(CELL(row,col).number)){
+        messageFlag = 1;
+        strcpy (message,"The cell is empty.");
+        return;
+    }
     if(CELL(row,col).flagged || CELL(row,col).question){
         messageFlag = 1;
-        strcpy (message,"The cell is already marked. You can unmark it using the action 'u'");
+        strcpy (message,"The cell is marked. You can unmark it first by using the action 'u'");
         return;
     }
     if (CELL(row,col).mined) {
         gameState = 0;//TODO: change gameState to enum later
+        return;
+    }
+    if(!(CELL(row,col).discovered)){
+        if(CELL(row,col).number){
+            CELL(row,col).show = (char)(48 + CELL(row,col).number);
+            return;
+        }
+        else{
+            CELL(row,col).show = ' ';
+            //DFS algorithm
+            return;
+        }
     }
 }
 void flagCell(int row, int col) {

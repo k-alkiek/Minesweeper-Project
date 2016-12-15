@@ -81,6 +81,7 @@ void putMines(){
         int col = rand() % c;
         if(!(CELL(row,col).mined) && !(CELL(row,col).discovered) ){ //only add mine in a cell if it does not already have a mine and is not already discovered (first open)
                 CELL(row,col).mined = 1;
+                minesPlaced ++;
         }
     }
 }
@@ -91,7 +92,7 @@ void putNumbers(){
             if(CELL(row,col).mined){
                 for(int i = row-1; i<=row+1; i++){
                     for(int j=col-1; j<=col+1; j++){
-                        if(inRange(r,row) && inRange(c,col) && !(CELL(row,col).mined) ) //add numbers only to unmined cells inside the boundaries
+                        if(i<r && i>=0 && j<c && j>=0 && !(CELL(i,j).mined) ) //add numbers only to unmined cells inside the boundaries
                             (CELL(i,j).number) ++;
                     }
                 }
