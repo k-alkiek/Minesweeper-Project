@@ -10,6 +10,7 @@
 
 time_t timeStart;  //variable to hold time value when the game starts. initialized in startup()
 bool messageFlag = 0;
+bool initialOpen;
 char message[100];
 int flags = 0 ;
 extern int r,c;
@@ -59,7 +60,6 @@ void openEmptyCell(int row, int col) {
 }
 
 void openCell(int row, int col) {
-    static bool initialOpen = 1;
     if(initialOpen){
         initialOpen = 0;
         CELL(row,col).discovered = 1;
@@ -67,9 +67,10 @@ void openCell(int row, int col) {
         putNumbers();
         if (CELL(row,col).number)
             CELL(row,col).show = (char)(48 + CELL(row,col).number);
-        else
+        else{
             CELL(row,col).show = ' ';
             openEmptyCell(row, col);
+            }
         return ;
     }
     //if(CELL.discovered)
@@ -171,6 +172,7 @@ bool play(){
     int rowIn, colIn;
     bool wrongInput = 0;
     char action;
+    initialOpen = 1;
     do
     {
     time(&timeNow); //get current time
