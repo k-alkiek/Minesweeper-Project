@@ -17,5 +17,5 @@ void gridInit();
 void putBlank(int row, int col);
 void putMines();
 void putNumbers();
-
+void openEmptyCell(int row, int col);
 #endif

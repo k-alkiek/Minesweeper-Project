@@ -13,7 +13,7 @@ bool messageFlag = 0;
 char message[100];
 int flags = 0 ;
 extern int r,c;
-extern struct cell grid[100][100];
+extern struct cell grid[30][30];
 
 bool gameState=1; //TODO: change to enum later, change in play() and openCell()
 
@@ -46,6 +46,17 @@ void clearScreen(void){
     return;
 }
 
+void openEmptyCell(int row, int col) {
+    int i, j;
+        for(i = row-1 ; i <= row+1 ; i++){
+            for (j = col-1 ; j <= col+1; j++) {
+                if (i<r && j < c && i>=0 && j>=0 && !CELL(i,j).discovered)
+                    openCell(i,j);
+            }
+        }
+    return;
+}
+
 void openCell(int row, int col) {
     static bool initialOpen = 1;
     if(initialOpen){
@@ -53,8 +64,11 @@ void openCell(int row, int col) {
         CELL(row,col).discovered = 1;
         putMines();
         putNumbers();
-        if(CELL(row,col).number) CELL(row,col).show = (char)(48 + CELL(row,col).number);
-        else CELL(row,col).show = ' ';
+        if (CELL(row,col).number)
+            CELL(row,col).show = (char)(48 + CELL(row,col).number);
+        else
+            CELL(row,col).show = ' ';
+            openEmptyCell(row, col);
         return ;
     }
     //if(CELL.discovered)
@@ -63,27 +77,35 @@ void openCell(int row, int col) {
         strcpy (message,"The cell is empty.");
         return;
     }
+    if (CELL(row,col).discovered == 1){
+        messageFlag = 1;
+        strcpy(message, "The cell is already opened.");
+        return;
+    }
     if(CELL(row,col).flagged || CELL(row,col).question){
         messageFlag = 1;
         strcpy (message,"The cell is marked. You can unmark it first by using the action 'u'");
         return;
     }
     if (CELL(row,col).mined) {
-        gameState = 0;//TODO: change gameState to enum later
+        gameState = 0;//TODO: change gameState to enum later - LOSS/LOSE HERE
         return;
     }
     if(!(CELL(row,col).discovered)){
+        CELL(row,col).discovered = 1;
         if(CELL(row,col).number){
             CELL(row,col).show = (char)(48 + CELL(row,col).number);
             return;
         }
         else{
             CELL(row,col).show = ' ';
+            openEmptyCell(row, col);
             //DFS algorithm
             return;
         }
     }
 }
+
 void flagCell(int row, int col) {
     if (CELL(row,col).discovered == 1) {
         strcpy(message, "The cell is already opened.");
@@ -100,6 +122,7 @@ void flagCell(int row, int col) {
     flags++;
     return;
 }
+
 void questionCell(int row, int col) {
     if (CELL(row,col).discovered == 1) {
         strcpy(message, "The cell is already opened.");
@@ -115,6 +138,7 @@ void questionCell(int row, int col) {
     CELL(row,col).show = '?' ;
     return;
 }
+
 void unmarkCell(int row, int col) {
     if (CELL(row,col).discovered == 1) {
         strcpy(message, "The cell is already opened.");
@@ -203,6 +227,7 @@ bool startup(void){
 
         case 'n':
         {
+            gameState = 1;
             getSize();
             gridInit();
             time(&timeStart); //initialize timeStart as soon as the game starts

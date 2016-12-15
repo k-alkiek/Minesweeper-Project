@@ -9,7 +9,7 @@
 
 
 int r,c,mines; //rows and columns
-struct cell grid[100][100];
+struct cell grid[30][30];
 extern time_t timeStart;
 
 
@@ -87,11 +87,12 @@ void putMines(){
 }
 
 void putNumbers(){
-    for(int row=0; row<r; row++){
-        for(int col=0; col<c; col++){
+    int row, col, i, j;
+    for(row=0; row<r; row++){
+        for(col=0; col<c; col++){
             if(CELL(row,col).mined){
-                for(int i = row-1; i<=row+1; i++){
-                    for(int j=col-1; j<=col+1; j++){
+                for(i = row-1; i<=row+1; i++){
+                    for(j=col-1; j<=col+1; j++){
                         if(i<r && i>=0 && j<c && j>=0 && !(CELL(i,j).mined) ) //add numbers only to unmined cells inside the boundaries
                             (CELL(i,j).number) ++;
                     }
