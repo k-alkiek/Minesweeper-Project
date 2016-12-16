@@ -13,7 +13,7 @@ time_t timeStart;  //variable to hold time value when the game starts. initializ
 bool messageFlag = 0;
 bool initialOpen;
 char message[100];
-int flags = 0 ;
+int flags;
 extern int r,c;
 extern struct cell grid[30][30];
 
@@ -29,9 +29,10 @@ char * title[] =  {"  __  __  _                     ____                        
 void printTitle(){
     int titleSize = sizeof(title) / sizeof(char*);
 
-    textColor("CYAN","DEFAULT");
-    for(int i=0; i<titleSize; i++){
-        for(int j=0; title[i][j]!='\0' ; j++){
+    textColor("RED","DEFAULT");
+    int i,j;
+    for(i=0; i<titleSize; i++){
+        for(j=0; title[i][j]!='\0' ; j++){
             putchar(title[i][j]);
             Sleep(1);
         }
@@ -196,11 +197,12 @@ bool play(){
     bool wrongInput = 0;
     char action;
     initialOpen = 1;
+    flags = 0;
     do
     {
     time(&timeNow); //get current time
     //double seconds = difftime(timeNow,timeStart);
-        clearScreen(); printf("   Time: %.f\n\n",difftime(timeNow,timeStart)); //difftime returns difference between two times
+        clearScreen(); printf("\n   Flags:%2d\t Time: %.f\n\n",1+(r*c)/10-flags,difftime(timeNow,timeStart)); //print remaining flags, difftime returns difference between two times
         draw();
         if(wrongInput){
             puts("Wrong entry.");
