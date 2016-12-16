@@ -3,6 +3,7 @@
 #include <time.h>
 
 #include "cells.h"
+#include "game.h"
 
 #define MAX_SIZE 100
 #define CELL(row,col) grid[row][col]

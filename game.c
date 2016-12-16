@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <windows.h>
 #include <time.h>
 #include "cells.h"
 #include "game.h"
@@ -17,6 +18,28 @@ extern int r,c;
 extern struct cell grid[30][30];
 
 bool gameState=1; //TODO: change to enum later, change in play() and openCell()
+
+char * title[] =  {"  __  __  _                     ____                                         ",
+                   " |  \\/  |(_) _ __    ___ __/\\__/ ___|__      __ ___   ___  _ __    ___  _ __ ",
+                   " | |\\/| || || '_ \\  / _ \\\\    /\\___ \\\\ \\ /\\ / // _ \\ / _ \\| '_ \\  / _ \\| '__|",
+                   " | |  | || || | | ||  __//_  _\\ ___) |\\ V  V /|  __/|  __/| |_) ||  __/| |   ",
+                   " |_|  |_||_||_| |_| \\___|  \\/  |____/  \\_/\\_/  \\___| \\___|| .__/  \\___||_|   ",
+                   "                                                          |_|                "};
+
+void printTitle(){
+    int titleSize = sizeof(title) / sizeof(char*);
+
+    textColor("CYAN","DEFAULT");
+    for(int i=0; i<titleSize; i++){
+        for(int j=0; title[i][j]!='\0' ; j++){
+            putchar(title[i][j]);
+            Sleep(1);
+        }
+        printf("\n");
+    }
+    textColor("DEFAULT","DEFAULT");
+    return;
+}
 
 bool inRange(int maximum, int input){
     if(input >=0 && input < maximum) return 1;
@@ -221,7 +244,9 @@ bool startup(void){
 
     do
     {
-        printf("Do you want to start a new game (n), load a previous game (l) or exit (x)?\n");
+        clearScreen();
+        printTitle();
+        printf("\n\t1. Start a new game     (n)\n\t2. Load a previous game (l)\n\t3. Exit                 (x)\n\n\tType the letter for the desired option: ");
         char input;
         fflush(stdin);
         scanf("%c",&input);
@@ -230,6 +255,7 @@ bool startup(void){
 
         case 'n':
         {
+            clearScreen();
             gameState = 1;
             getSize();
             gridInit();
@@ -257,4 +283,34 @@ bool startup(void){
     while(1) ;
 }
 
+void textColor(char * ForeColor, char* BackColor){
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
 
+    int f=0,b=0;
+
+    if (ForeColor == "DEFAULT") f = 7;
+    else if (ForeColor == "BLACK") f = 0;
+    else if (ForeColor == "DARK_BLUE") f = 1;
+    else if (ForeColor == "GREEN") f = 2;
+    else if (ForeColor == "NAVY") f = 3;
+    else if(ForeColor == "DARK_RED") f = 4;
+    else if (ForeColor == "MAGENTA") f = 5;
+    else if (ForeColor == "YELLOW") f = 6;
+    else if (ForeColor == "GREY") f = 8;
+    else if (ForeColor == "BLUE") f = 9;
+    else if (ForeColor == "LIGHT_GREEN") f = 10;
+    else if (ForeColor == "CYAN") f = 11;
+    else if (ForeColor == "RED") f = 12;
+    else if (ForeColor == "LIGHT_MAGENTA") f = 13;
+
+    if (BackColor == "DEFAULT") b=0;
+    if (BackColor == "GREY") b=128;
+    else if (BackColor == "BLUE") b=16;
+    else if (BackColor == "GREEN") b=32;
+    else if (BackColor == "RED") b=64;
+
+    SetConsoleTextAttribute(hConsole, f|b);
+
+    return ;
+}
