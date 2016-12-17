@@ -4,12 +4,15 @@
 #include <string.h>
 #include <windows.h>
 #include <time.h>
+#include <pthread.h>
+
 #include "cells.h"
 #include "game.h"
 
 #define CELL(row,col) grid[row][col]
+#define IDLE_TIME 60
 
-time_t timeStart;
+time_t timeStart,timeNow;
 bool messageFlag = 0;
 bool initialOpen;
 char message[100];
@@ -19,7 +22,7 @@ extern struct cell grid[30][30];
 
 //bool gameState=1; //TODO: change to enum later, change in play() and openCell()
 enum state gameState;
-
+bool isIdle;
 
 char * title[] =  {"  __  __  _                     ____                                         ",
                    " |  \\/  |(_) _ __    ___ __/\\__/ ___|__      __ ___   ___  _ __    ___  _ __ ",
@@ -71,6 +74,24 @@ bool validAction(char input) {
 void clearScreen(void){
     system("cls");
     return;
+}
+
+void* idleTimer(void){
+    double seconds = difftime(timeNow,timeStart);   //time counter initialized to current time
+    while(isIdle){      //isIdle is set to true before input and set to false after input
+        time(&timeNow);
+
+
+        if( difftime(timeNow,timeStart) - seconds >= IDLE_TIME){    //when IDLE_TIME passes
+            clearScreen(); printf("\n   Flags:%2d\t Time: %.f\n\n",1+(r*c)/10-flags,difftime(timeNow,timeStart)); //print remaining flags, difftime returns difference between two times
+            draw();                 //redraw with new time
+            puts("Please enter your move in the form of ( row col action )");
+            seconds = difftime(timeNow,timeStart);  //update time counter for the next iteration
+            Sleep(1000);    //to avoid multiple simultaneous redraw
+        }
+
+    }
+    pthread_exit(0);
 }
 
 void openEmptyCell(int row, int col) {
@@ -206,7 +227,6 @@ void unmarkCell(int row, int col) {
 
 bool play(double timePassed, int flagsAlreadyPlaced, bool localInitialOpen ){
 
-    time_t timeNow;
     time(&timeStart);
     int rowIn, colIn;
     bool wrongInput = 0;
@@ -227,9 +247,16 @@ bool play(double timePassed, int flagsAlreadyPlaced, bool localInitialOpen ){
             puts(message);
             messageFlag = 0 ;
         }
+
         puts("Please enter your move in the form of ( row col action )");
+
+        isIdle = 1;     //launch thread loop
+        pthread_t idleThread;       //pthread stuff
+        pthread_create(&idleThread,NULL,idleTimer,NULL);
+
         rowIn = -1 ; colIn = -1; action = 'z';  //invalid values
         scanf("%d %d %c", &rowIn, &colIn, &action); //TODO: Adjust input method for saving
+        isIdle = 0;
         fflush(stdin);
         if ( !( inRange(r,rowIn) && inRange(c, colIn) && validAction(action) ) ){
             wrongInput = 1;

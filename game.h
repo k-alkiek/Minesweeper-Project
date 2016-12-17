@@ -1,6 +1,5 @@
 #ifndef GAMEHEADER
 #define GAMEHEADER
-#include <stdbool.h>
 
 enum state{
     playing,win,lose

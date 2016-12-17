@@ -15,7 +15,7 @@
 	<time.h>
 	"cells.h"
 
-1481111855 source:c:\users\khaled\desktop\minesweeper project\main.c
+1481990481 source:c:\users\khaled\desktop\minesweeper project\main.c
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
@@ -46,7 +46,7 @@
 	<stdbool.h>
 	"cells.h"
 
-1481914941 source:c:\users\khaled\desktop\minesweeper project\game.c
+1481990481 source:c:\users\khaled\desktop\minesweeper project\game.c
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
@@ -56,8 +56,7 @@
 	"cells.h"
 	"game.h"
 
-1481909886 c:\users\khaled\desktop\minesweeper project\game.h
-	<stdbool.h>
+1481995024 c:\users\khaled\desktop\minesweeper project\game.h
 
 1481960558 source:c:\users\a2hp11\desktop\minesweeper\cells.c
 	<stdio.h>
