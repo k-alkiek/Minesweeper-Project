@@ -202,7 +202,7 @@ void unmarkCell(int row, int col) {
 
 }
 
-bool play(double timePassed, int flags, bool localInitialOpen ){
+bool play(double timePassed, int flagsAlreadyPlaced, bool localInitialOpen ){
 
     time_t timeNow;
     time(&timeStart);
@@ -210,6 +210,7 @@ bool play(double timePassed, int flags, bool localInitialOpen ){
     bool wrongInput = 0;
     char action;
     initialOpen = localInitialOpen;
+    flags = flagsAlreadyPlaced;
     do
     {
     time(&timeNow); //get current time
