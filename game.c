@@ -9,7 +9,7 @@
 
 #define CELL(row,col) grid[row][col]
 
-time_t timeStart;  //variable to hold time value when the game starts. initialized in startup()
+time_t timeStart;
 bool messageFlag = 0;
 bool initialOpen;
 char message[100];
@@ -34,7 +34,7 @@ void printTitle(){
     for(i=0; i<titleSize; i++){
         for(j=0; title[i][j]!='\0' ; j++){
             putchar(title[i][j]);
-            Sleep(1);
+            //Sleep(1);
         }
         printf("\n");
     }
@@ -190,14 +190,14 @@ void unmarkCell(int row, int col) {
 
 }
 
-bool play(){
+bool play(double timePassed, int flags, bool localInitialOpen ){
 
     time_t timeNow;
+    time(&timeStart);
     int rowIn, colIn;
     bool wrongInput = 0;
     char action;
-    initialOpen = 1;
-    flags = 0;
+    initialOpen = localInitialOpen;
     do
     {
     time(&timeNow); //get current time
@@ -242,7 +242,7 @@ bool play(){
     return;
 }
 
-bool startup(void){
+void Game(void){
 
     do
     {
@@ -261,8 +261,7 @@ bool startup(void){
             gameState = 1;
             getSize();
             gridInit();
-            time(&timeStart); //initialize timeStart as soon as the game starts
-            play();
+            play(0, 0, 1);
             break;
         }
         case 'l':

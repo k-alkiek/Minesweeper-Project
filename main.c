@@ -11,8 +11,7 @@
 
 int main(void){
 
-    if (startup() )
-        return 0;
+    Game();
 
     return 0;
 }
