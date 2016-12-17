@@ -104,8 +104,20 @@ void openCell(int row, int col) {
         return;
     }
     if (CELL(row,col).discovered == 1){
-        messageFlag = 1;
-        strcpy(message, "The cell is already opened.");
+        int flagsAround = 0;
+        int i,j;
+        for(i = row-1 ; i <= row+1 ; i++){
+            for (j = col-1 ; j <= col+1; j++) {
+                if (i<r && j < c && i>=0 && j>=0 && CELL(i,j).flagged)
+                    flagsAround++;
+            }
+        }
+        if (flagsAround == CELL(row,col).number)
+            openEmptyCell(row, col);
+        else {
+            messageFlag = 1;
+            strcpy(message, "The cell is already opened.");
+        }
         return;
     }
     if(CELL(row,col).flagged || CELL(row,col).question){
