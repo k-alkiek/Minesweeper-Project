@@ -1,6 +1,10 @@
 #ifndef GAMEHEADER
 #define GAMEHEADER
 #include <stdbool.h>
+
+enum state{
+    playing,win,lose
+};
 bool inRange(int maximum, int input);
 bool validAction(char input);
 void clearScreen(void);

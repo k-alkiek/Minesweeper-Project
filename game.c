@@ -17,7 +17,9 @@ int flags;
 extern int r,c;
 extern struct cell grid[30][30];
 
-bool gameState=1; //TODO: change to enum later, change in play() and openCell()
+//bool gameState=1; //TODO: change to enum later, change in play() and openCell()
+enum state gameState;
+
 
 char * title[] =  {"  __  __  _                     ____                                         ",
                    " |  \\/  |(_) _ __    ___ __/\\__/ ___|__      __ ___   ___  _ __    ___  _ __ ",
@@ -126,7 +128,7 @@ void openCell(int row, int col) {
         return;
     }
     if (CELL(row,col).mined) {
-        gameState = 0;//TODO: change gameState to enum later - LOSS/LOSE HERE
+        gameState = lose;//TODO: change gameState to enum later - LOSS/LOSE HERE
         return;
     }
     if(!(CELL(row,col).discovered)){
@@ -251,7 +253,7 @@ bool play(double timePassed, int flagsAlreadyPlaced, bool localInitialOpen ){
 
         // Input validation implemented like a boss B-)
     }
-    while (gameState);
+    while (gameState==playing);
     return;
 }
 
@@ -271,7 +273,7 @@ void Game(void){
         case 'n':
         {
             clearScreen();
-            gameState = 1;
+            gameState = playing;
             getSize();
             gridInit();
             play(0, 0, 1);
