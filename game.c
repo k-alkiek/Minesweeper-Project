@@ -17,7 +17,7 @@ bool messageFlag = 0;
 bool initialOpen;
 char message[100];
 int flags;
-extern int r,c;
+extern int r,c, mines;
 extern struct cell grid[30][30];
 
 //bool gameState=1; //TODO: change to enum later, change in play() and openCell()
@@ -76,7 +76,7 @@ void clearScreen(void){
     return;
 }
 
-void* idleTimer(void){
+void* idleTimer(void){  //function pointer for the idle thread
     double seconds = difftime(timeNow,timeStart);   //time counter initialized to current time
     while(isIdle){      //isIdle is set to true before input and set to false after input
         time(&timeNow);
@@ -94,6 +94,27 @@ void* idleTimer(void){
     pthread_exit(0);
 }
 
+void checkWin(){
+    int undiscovered = 0;
+    int i, j;
+    for (i = 0 ; i < r ; i++) {
+        for ( j = 0 ; j < c ; j++) {
+            if (! CELL(i,j).discovered)
+                undiscovered++;
+        }
+    }
+    if (undiscovered == mines && gameState == playing) {
+        gameState = win;
+    }
+}
+
+void gameWin() {
+    // FLASH TODO
+    char playerName[33];
+    puts("Enter your name: ");
+    fgets(playerName,32,stdin);
+
+}
 void openEmptyCell(int row, int col) {
     int i, j;
     for(i = row-1 ; i <= row+1 ; i++){
@@ -264,7 +285,7 @@ bool play(double timePassed, int flagsAlreadyPlaced, bool localInitialOpen ){
         }
         switch(action){
             case 'O':
-            case 'o': {openCell(rowIn, colIn); break;}
+            case 'o': {openCell(rowIn, colIn); checkWin(); break;}
             case 'F':
             case 'f': {flagCell(rowIn, colIn); break;}
             case 'Q':
@@ -281,6 +302,10 @@ bool play(double timePassed, int flagsAlreadyPlaced, bool localInitialOpen ){
         // Input validation implemented like a boss B-)
     }
     while (gameState==playing);
+    if (gameState == win)
+        gameWin();  //TODO
+    else
+        //lose(); TODO
     return;
 }
 

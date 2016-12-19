@@ -46,13 +46,14 @@
 	<stdbool.h>
 	"cells.h"
 
-1481990481 source:c:\users\khaled\desktop\minesweeper project\game.c
+1482003955 source:c:\users\khaled\desktop\minesweeper project\game.c
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
 	<string.h>
 	<windows.h>
 	<time.h>
+	<pthread.h>
 	"cells.h"
 	"game.h"
 
