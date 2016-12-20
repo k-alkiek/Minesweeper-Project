@@ -14,13 +14,12 @@
 
 time_t timeStart,timeNow;
 bool messageFlag = 0;
-bool initialOpen;
+int initialOpen;
 char message[100];
-int flags;
+int flags,questions,moves;
 extern int r,c, mines;
 extern struct cell grid[30][30];
 
-//bool gameState=1; //TODO: change to enum later, change in play() and openCell()
 enum state gameState;
 bool isIdle;
 
@@ -108,11 +107,14 @@ void checkWin(){
     }
 }
 
-void gameWin() {
+void gameWin(double timePassed) {
     // FLASH TODO
     char playerName[33];
+    long long score = r*r*r*r*c*c*c*c/moves/(timePassed + difftime(timeNow,timeStart));
     puts("Enter your name: ");
     fgets(playerName,32,stdin);
+    printf("%s",playerName);
+    getch();
 
 }
 void openEmptyCell(int row, int col) {
@@ -218,6 +220,7 @@ void questionCell(int row, int col) {
     }
     CELL(row,col).question = 1;
     CELL(row,col).show = '?' ;
+    questions++;
     return;
 }
 
@@ -234,6 +237,7 @@ void unmarkCell(int row, int col) {
     }
     if (CELL(row,col).question == 1) {
         CELL(row,col).question = 0;
+        questions--;
         CELL(row,col).show = 'X' ;
         return;
     }
@@ -246,19 +250,21 @@ void unmarkCell(int row, int col) {
 
 }
 
-bool play(double timePassed, int flagsAlreadyPlaced, bool localInitialOpen ){
+void play(double timePassed, int localInitialOpen){
 
     time(&timeStart);
     int rowIn, colIn;
     bool wrongInput = 0;
     char action;
     initialOpen = localInitialOpen;
-    flags = flagsAlreadyPlaced;
+    gameState = playing;
+    mines = 1+(r*c)/10;
+
     do
     {
     time(&timeNow); //get current time
     //double seconds = difftime(timeNow,timeStart);
-        clearScreen(); printf("\n   Flags:%2d\t Time: %.f\n\n",1+(r*c)/10-flags,difftime(timeNow,timeStart)); //print remaining flags, difftime returns difference between two times
+        clearScreen(); printf("\n    Moves: %d\t Flags: %d\t Question Marks: %d\t Time: %.f\n\n",moves,flags,questions,timePassed + difftime(timeNow,timeStart)); //print remaining flags, difftime returns difference between two times
         draw();
         if(wrongInput){
             puts("Wrong entry.");
@@ -276,6 +282,8 @@ bool play(double timePassed, int flagsAlreadyPlaced, bool localInitialOpen ){
         pthread_create(&idleThread,NULL,idleTimer,NULL);
 
         rowIn = -1 ; colIn = -1; action = 'z';  //invalid values
+
+
         scanf("%d %d %c", &rowIn, &colIn, &action); //TODO: Adjust input method for saving
         isIdle = 0;
         fflush(stdin);
@@ -294,16 +302,16 @@ bool play(double timePassed, int flagsAlreadyPlaced, bool localInitialOpen ){
             case 'U':
             case 'u': {unmarkCell(rowIn, colIn); break;}
             case 'S':  // add functions later
-            case 's': break;
+            case 's': {save(timePassed+difftime(timeNow,timeStart));break;}
     }
-
+    moves++;
 
 
         // Input validation implemented like a boss B-)
     }
     while (gameState==playing);
     if (gameState == win)
-        gameWin();  //TODO
+        gameWin(timePassed);  //TODO
     else
         //lose(); TODO
     return;
@@ -325,15 +333,15 @@ void Game(void){
         case 'n':
         {
             clearScreen();
-            gameState = playing;
             getSize();
             gridInit();
-            play(0, 0, 1);
+            play(0, 1);
             break;
         }
         case 'l':
         {
-            /*TODO: load();*/ break;
+            load();
+            break;
         }
         case 'x':
             return 1;
@@ -351,6 +359,54 @@ void Game(void){
     while(1) ;
 }
 
+void save(double timePassed){
+    FILE* fp = fopen("save.txt","w");
+
+    if(fp==NULL)
+        printf("Error opening file.\n");
+    else{
+        fflush(fp);
+        fprintf(fp,"%d %d %lf %d %d %d %d\n",r,c,timePassed,moves,flags,questions,initialOpen);
+        int row, col;
+        for(row =0; row<r; row++){
+            for(col=0; col<c; col++){
+                if (CELL(row,col).show == ' ')
+                    CELL(row,col).show = 's';
+                fflush(fp);
+                fprintf(fp,"%d %d %d %d %d %c\n",CELL(row,col).discovered,CELL(row,col).mined,CELL(row,col).number,CELL(row,col).flagged,CELL(row,col).question,CELL(row,col).show);
+            }
+            fprintf(fp,"\n");
+        }
+        if (CELL(r,c).show == ' ')
+                    CELL(r,c).show = 's';
+                fflush(fp);         //TODO later
+                fprintf(fp,"%d %d %d %d %d %c\n",CELL(r,c).discovered,CELL(r,c).mined,CELL(r,c).number,CELL(r,c).flagged,CELL(r,c).question,CELL(r,c).show);
+
+
+    }
+}
+
+void load() {
+    FILE* fp = fopen("save.txt","rt");
+
+    if(fp==NULL)
+        puts("Error loading file.");
+    else{
+
+        double loadedTimePassed; int loadedinitialOpen;
+        fscanf(fp,"%d %d %lf %d %d %d %d",&r,&c,&loadedTimePassed,&moves,&flags,&questions,&loadedinitialOpen);
+        int row, col;
+        for(row =0; row<r; row++){
+            for(col=0; col<c; col++){
+                fscanf(fp,"%d %d %d %d %d %c",&CELL(row,col).discovered,&CELL(row,col).mined,&CELL(row,col).number,&CELL(row,col).flagged,&CELL(row,col).question,&CELL(row,col).show);
+                if (CELL(row,col).show == 's')
+                    CELL(row,col).show = ' ';
+            }
+        }
+    play(loadedTimePassed,loadedinitialOpen);
+    }
+
+}
 void textColor(char * ForeColor, char* BackColor){
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_SCREEN_BUFFER_INFO consoleInfo;

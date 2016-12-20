@@ -31,6 +31,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="SaveLoad.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="SaveLoad.h" />
 		<Unit filename="cells.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -22,7 +22,7 @@ void getSize() {
     fflush(stdin);
     scanf("%d %d", &r, &c);
     }while(r<2 || r>MAX_SIZE || c<2 || c>MAX_SIZE);
-    mines = 1+(r*c)/10;     //get number of mines in the game
+         //get number of mines in the game
 }
 
 
