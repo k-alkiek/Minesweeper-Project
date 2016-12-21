@@ -8,9 +8,6 @@
 #define MAX_SIZE 30
 #define CELL(row,col) grid[row][col]
 
-
-int r,c,mines; //rows and columns
-struct cell grid[30][30];
 extern time_t timeStart;
 
 

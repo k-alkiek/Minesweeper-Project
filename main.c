@@ -5,10 +5,6 @@
 #include "cells.h"
 #include "game.h"
 
-
-
-
-
 int main(void){
 
     Game();

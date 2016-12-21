@@ -31,10 +31,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="SaveLoad.c">
+		<Unit filename="Score.h" />
+		<Unit filename="Scores.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="SaveLoad.h" />
 		<Unit filename="cells.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -8,20 +8,14 @@
 
 #include "cells.h"
 #include "game.h"
+#include "scores.h"
 
 #define CELL(row,col) grid[row][col]
 #define IDLE_TIME 60
 
-time_t timeStart,timeNow;
-bool messageFlag = 0;
-int initialOpen;
-char message[100];
-int flags,questions,moves;
-extern int r,c, mines;
-extern struct cell grid[30][30];
 
-enum state gameState;
-bool isIdle;
+char message[100];
+bool messageFlag = 0;
 
 char * title[] =  {"  __  __  _                     ____                                         ",
                    " |  \\/  |(_) _ __    ___ __/\\__/ ___|__      __ ___   ___  _ __    ___  _ __ ",
@@ -38,7 +32,7 @@ void printTitle(){
     for(i=0; i<titleSize; i++){
         for(j=0; title[i][j]!='\0' ; j++){
             putchar(title[i][j]);
-            //Sleep(1);
+            Sleep(1);
         }
         printf("\n");
     }
@@ -82,7 +76,8 @@ void* idleTimer(void){  //function pointer for the idle thread
 
 
         if( difftime(timeNow,timeStart) - seconds >= IDLE_TIME){    //when IDLE_TIME passes
-            clearScreen(); printf("\n   Flags:%2d\t Time: %.f\n\n",1+(r*c)/10-flags,difftime(timeNow,timeStart)); //print remaining flags, difftime returns difference between two times
+            clearScreen();
+            printf("\n    Moves: %d\t Flags: %d\t Question Marks: %d\t Time: %.f\n\n",moves,flags,questions,timePassed + difftime(timeNow,timeStart)); //print remaining flags, difftime returns difference between two times
             draw();                 //redraw with new time
             puts("Please enter your move in the form of ( row col action )");
             seconds = difftime(timeNow,timeStart);  //update time counter for the next iteration
@@ -107,16 +102,6 @@ void checkWin(){
     }
 }
 
-void gameWin(double timePassed) {
-    // FLASH TODO
-    char playerName[33];
-    long long score = r*r*r*r*c*c*c*c/moves/(timePassed + difftime(timeNow,timeStart));
-    puts("Enter your name: ");
-    fgets(playerName,32,stdin);
-    printf("%s",playerName);
-    getch();
-
-}
 void openEmptyCell(int row, int col) {
     int i, j;
     for(i = row-1 ; i <= row+1 ; i++){
@@ -250,13 +235,14 @@ void unmarkCell(int row, int col) {
 
 }
 
-void play(double timePassed, int localInitialOpen){
+void play(double timeAlreadyPassed,int localInitialOpen){
 
     time(&timeStart);
     int rowIn, colIn;
     bool wrongInput = 0;
     char action;
     initialOpen = localInitialOpen;
+    timePassed = timeAlreadyPassed;
     gameState = playing;
     mines = 1+(r*c)/10;
 
@@ -302,7 +288,7 @@ void play(double timePassed, int localInitialOpen){
             case 'U':
             case 'u': {unmarkCell(rowIn, colIn); break;}
             case 'S':  // add functions later
-            case 's': {save(timePassed+difftime(timeNow,timeStart));break;}
+            case 's': {save();break;}
     }
     moves++;
 
@@ -310,8 +296,13 @@ void play(double timePassed, int localInitialOpen){
         // Input validation implemented like a boss B-)
     }
     while (gameState==playing);
+
+    clearScreen();
+    printf("\n    Moves: %d\t Flags: %d\t Question Marks: %d\t Time: %.f\n\n",moves,flags,questions,timePassed + difftime(timeNow,timeStart)); //print remaining flags, difftime returns difference between two times
+    draw();
+
     if (gameState == win)
-        gameWin(timePassed);  //TODO
+        getScore();  //TODO
     else
         //lose(); TODO
     return;
@@ -359,14 +350,14 @@ void Game(void){
     while(1) ;
 }
 
-void save(double timePassed){
+void save(){
     FILE* fp = fopen("save.txt","w");
 
     if(fp==NULL)
         printf("Error opening file.\n");
     else{
         fflush(fp);
-        fprintf(fp,"%d %d %lf %d %d %d %d\n",r,c,timePassed,moves,flags,questions,initialOpen);
+        fprintf(fp,"%d %d %f %d %d %d %d\n",r,c,timePassed+difftime(timeNow,timeStart),moves,flags,questions,initialOpen);
         int row, col;
         for(row =0; row<r; row++){
             for(col=0; col<c; col++){
@@ -403,7 +394,7 @@ void load() {
                     CELL(row,col).show = ' ';
             }
         }
-    play(loadedTimePassed,loadedinitialOpen);
+    play(loadedTimePassed, loadedinitialOpen);
     }
 
 }
