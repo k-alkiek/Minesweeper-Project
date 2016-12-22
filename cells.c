@@ -31,7 +31,7 @@ void gridInit(){
 }
 
 void draw() {
-    static int i,j;
+    int i,j;
     printf("  ");
     for ( j = 0 ; j < c ; j++) {
         printf(" %3d",j); //print column numbers
@@ -107,16 +107,20 @@ void ColorPrintChar(char c){
 
     int f=0,b=0;
     switch(c){  //TODO: add cases for gameOver grid
+        case '*':
         case 'X':{ f=15; b=128; break;}
         case ' ':{ f=7; b=0; break;}
+        case 'M':
         case 'F':{ f=15; b=32; break;}
         case '?':{ f=5; b=128; break;}
         case '1':{ f=11; b=0; break;}
+        case '-':
         case '2':{ f=10; b=0; break;}
         case '3':{ f=12; b=0; break;}
         case '4':{ f=3; b=0; break;}
         case '5':{ f=15; b=0; break;}
         case '6':{ f=13; b=0; break;}
+        case '!':
         case '7':{ f=9; b=0; break;}
         case '8':{ f=9; b=0; break;}
     }

@@ -10,9 +10,14 @@ int initialOpen;
 int flags,questions,moves;
 double timePassed;
 bool isIdle;
+int boom;
 
+struct DETONATIONS {
+    int row;
+    int col;
+}detonations[8];
 enum state{
-    playing,win,lose
+    playing,won,lost
 }gameState;
 
 bool inRange(int maximum, int input);
@@ -22,6 +27,7 @@ void play(double,int);
 void Game();
 void textColor(char * ForeColor, char* BackColor);
 void openEmptyCell(int row, int col);
-
+void lose();
+void win();
 
 #endif

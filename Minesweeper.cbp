@@ -31,10 +31,6 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="Score.h" />
-		<Unit filename="Scores.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="cells.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -46,6 +42,10 @@
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="scores.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="scores.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

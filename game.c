@@ -98,7 +98,7 @@ void checkWin(){
         }
     }
     if (undiscovered == mines && gameState == playing) {
-        gameState = win;
+        gameState = won;
     }
 }
 
@@ -157,7 +157,11 @@ void openCell(int row, int col) {
         return;
     }
     if (CELL(row,col).mined) {
-        gameState = lose;//TODO: change gameState to enum later - LOSS/LOSE HERE
+        if(gameState == playing)
+            boom = 0;
+        gameState = lost;
+        detonations[boom].row = row;
+        detonations[boom++].col = col;
         return;
     }
     if(!(CELL(row,col).discovered)){
@@ -234,6 +238,46 @@ void unmarkCell(int row, int col) {
     }
 
 }
+void win () {
+    int i,j;
+        for (i = 0 ; i < r ; i++) { //Flagging mines.
+            for (j = 0 ; j < c ; j++) {
+                if (CELL(i,j).mined)
+                    CELL(i,j).show = 'F';
+            }
+        }
+        clearScreen();
+        printf("\n    Moves: %d\t Flags: %d\t Question Marks: %d\t Time: %.f\n\n",moves,flags,questions,timePassed + difftime(timeNow,timeStart)); //print remaining flags, difftime returns difference between two times
+        draw();
+        getScore();
+}
+void lose() {
+    int i, j;
+    for (i = 0 ; i < boom ; i++) {
+        CELL((detonations[i].row),(detonations[i].col)).show = '!';
+    }
+    //Detonated mines marked with '!'.
+    for (i = 0 ; i < r ; i++) {
+        for (j = 0 ; j < c ; j++) {
+            if (CELL(i,j).show == '!')
+                continue;
+            if (CELL(i,j).flagged && !CELL(i,j).mined) {
+                CELL(i,j).show = '-'; //Incorrect flag.
+            }
+            else if (CELL(i,j).flagged && CELL(i,j).mined)
+                CELL(i,j).show = '*'; //Correctly-flagged mine.
+            else if (!CELL(i,j).flagged && CELL(i,j).mined)
+                CELL(i,j).show = 'M'; //Missed mine.
+            else if (CELL(i,j).number) //Showing the rest of the grid.
+                CELL(i,j).show = CELL(i,j).number + '0';
+            else CELL(i,j).show = ' ';
+        }
+    }
+    //TODO : FLASH
+    draw();
+    puts("Hit enter to return to the main menu.");
+    getchar();
+}
 
 void play(double timeAlreadyPassed,int localInitialOpen){
 
@@ -297,14 +341,11 @@ void play(double timeAlreadyPassed,int localInitialOpen){
     }
     while (gameState==playing);
 
-    clearScreen();
-    printf("\n    Moves: %d\t Flags: %d\t Question Marks: %d\t Time: %.f\n\n",moves,flags,questions,timePassed + difftime(timeNow,timeStart)); //print remaining flags, difftime returns difference between two times
-    draw();
-
-    if (gameState == win)
-        getScore();  //TODO
+    if (gameState == won) {
+        win();
+    }
     else
-        //lose(); TODO
+        lose();
     return;
 }
 
@@ -335,7 +376,7 @@ void Game(void){
             break;
         }
         case 'x':
-            return 1;
+            return;
             break;
         default :
         {

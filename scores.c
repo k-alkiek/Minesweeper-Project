@@ -11,9 +11,10 @@
 void insertScore(char* playerName,int score,int i){
     //DEBUG
     struct player debugArr[11];
-    for(int i=0; i<10; i++){
-        strcpy(debugArr[i].name,topPlayer[i].name);
-        debugArr[i].score = topPlayer[i].score;
+    int h;
+    for(h = 0; h<10; h++){
+        strcpy(debugArr[h].name,topPlayer[h].name);
+        debugArr[h].score = topPlayer[h].score;
     }
 
     int c;
@@ -48,7 +49,8 @@ long getName (int i){
 void saveTopPlayers(){
     //DEBUG
     struct player debugArr[11];
-    for(int i=0; i<10; i++){
+    int i;
+    for(i=0; i<10; i++){
         strcpy(debugArr[i].name,topPlayer[i].name);
         debugArr[i].score = topPlayer[i].score;
     }
@@ -96,7 +98,7 @@ void getScore() {
 
     //DEBUG
     struct player debugArrAfterLoad[11];
-    for(int i=0; i<10; i++){
+    for(i=0; i<10; i++){
         strcpy(debugArrAfterLoad[i].name,topPlayer[i].name);
         debugArrAfterLoad[i].score = topPlayer[i].score;
     }
@@ -111,9 +113,10 @@ void getScore() {
     }
 
     struct player debugArrAfterInsert[11];
-    for(int i=0; i<10; i++){
-        strcpy(debugArrAfterInsert[i].name,topPlayer[i].name);
-        debugArrAfterInsert[i].score = topPlayer[i].score;
+    int h;
+    for(h = 0; h<10; h++){
+        strcpy(debugArrAfterInsert[h].name,topPlayer[h].name);
+        debugArrAfterInsert[h].score = topPlayer[h].score;
     }
 
     saveTopPlayers();
