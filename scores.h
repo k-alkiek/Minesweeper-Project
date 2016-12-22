@@ -9,5 +9,9 @@ struct player{
 void insertScore(char* playerName,int score,int i);
 void getScore();
 long getName (int);
+void saveTopPlayers();
+void loadTopPlayers();
+void clearLeaderboard();
+void displayLeaderboard(int);
 
 #endif // SCORE_H_INCLUDED

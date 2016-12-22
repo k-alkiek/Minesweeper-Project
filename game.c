@@ -11,31 +11,81 @@
 #include "scores.h"
 
 #define CELL(row,col) grid[row][col]
-#define IDLE_TIME 60
+#define IDLE_TIME 50
 
 
 char message[100];
 bool messageFlag = 0;
 
-char * title[] =  {"  __  __  _                     ____                                         ",
+char * titleAscii[] =  {"  __  __  _                     ____                                         ",
                    " |  \\/  |(_) _ __    ___ __/\\__/ ___|__      __ ___   ___  _ __    ___  _ __ ",
                    " | |\\/| || || '_ \\  / _ \\\\    /\\___ \\\\ \\ /\\ / // _ \\ / _ \\| '_ \\  / _ \\| '__|",
                    " | |  | || || | | ||  __//_  _\\ ___) |\\ V  V /|  __/|  __/| |_) ||  __/| |   ",
                    " |_|  |_||_||_| |_| \\___|  \\/  |____/  \\_/\\_/  \\___| \\___|| .__/  \\___||_|   ",
                    "                                                          |_|                "};
 
-void printTitle(){
-    int titleSize = sizeof(title) / sizeof(char*);
+char * wonAscii[] =  {  " __     __            __          __ _         _ ",
+                        " \\ \\   / /            \\ \\        / /(_)       | |",
+                        "  \\ \\_/ /___   _   _   \\ \\  /\\  / /  _  _ __  | |",
+                        "   \\   // _ \\ | | | |   \\ \\/  \\/ /  | || '_ \\ | |",
+                        "    | || (_) || |_| |    \\  /\\  /   | || | | ||_|",
+                        "    |_| \\___/  \\__,_|     \\/  \\/    |_||_| |_|(_)"};
+
+char * lostAscii[] =  { "   _____                            ____                    ",
+                        "  / ____|                          / __ \\                   ",
+                        " | |  __   __ _  _ __ ___    ___  | |  | |__   __ ___  _ __ ",
+                        " | | |_ | / _` || '_ ` _ \\  / _ \\ | |  | |\\ \\ / // _ \\| '__|",
+                        " | |__| || (_| || | | | | ||  __/ | |__| | \\ V /|  __/| |   ",
+                        "  \\_____| \\__,_||_| |_| |_| \\___|  \\____/   \\_/  \\___||_|   "};
+
+void printTitleAscii(){
+    int titleSize = sizeof(titleAscii) / sizeof(char*);
 
     textColor("RED","DEFAULT");
     int i,j;
     for(i=0; i<titleSize; i++){
-        for(j=0; title[i][j]!='\0' ; j++){
-            putchar(title[i][j]);
-            Sleep(1);
+        for(j=0; titleAscii[i][j]!='\0' ; j++){
+            putchar(titleAscii[i][j]);
+            //Sleep(1);
         }
         printf("\n");
     }
+    textColor("DEFAULT","DEFAULT");
+    return;
+}
+
+void printWonAscii(){
+    int size = sizeof(wonAscii) / sizeof(char*);
+
+    textColor("LIGHT_GREEN","DEFAULT");
+    int i,j;
+    printf("\t");
+    for(i=0; i<size; i++){
+        for(j=0; wonAscii[i][j]!='\0' ; j++){
+            putchar(wonAscii[i][j]);
+            //Sleep(1);
+        }
+        printf("\n\t");
+    }
+    printf("\n");
+    textColor("DEFAULT","DEFAULT");
+    return;
+}
+
+void printLostAscii(){
+    int size = sizeof(lostAscii) / sizeof(char*);
+
+    textColor("RED","DEFAULT");
+    int i,j;
+    printf("\t");
+    for(i=0; i<size; i++){
+        for(j=0; lostAscii[i][j]!='\0' ; j++){
+            putchar(lostAscii[i][j]);
+            //Sleep(1);
+        }
+        printf("\n\t");
+    }
+    printf("\n");
     textColor("DEFAULT","DEFAULT");
     return;
 }
@@ -70,17 +120,18 @@ void clearScreen(void){
 }
 
 void* idleTimer(void){  //function pointer for the idle thread
-    double seconds = difftime(timeNow,timeStart);   //time counter initialized to current time
+    double secondsPassed = difftime(timeNow,timeStart);   //time counter initialized to current time
     while(isIdle){      //isIdle is set to true before input and set to false after input
         time(&timeNow);
 
 
-        if( difftime(timeNow,timeStart) - seconds >= IDLE_TIME){    //when IDLE_TIME passes
+        if( difftime(timeNow,timeStart) - secondsPassed >= IDLE_TIME){    //when IDLE_TIME passes
             clearScreen();
-            printf("\n    Moves: %d\t Flags: %d\t Question Marks: %d\t Time: %.f\n\n",moves,flags,questions,timePassed + difftime(timeNow,timeStart)); //print remaining flags, difftime returns difference between two times
+            double seconds = timePassed + difftime(timeNow,timeStart);
+            printf("\n    Moves: %d\t Flags: %d\t Question Marks: %d\t Time: %2d:%2.2d\n\n",moves,flags,questions,(int)seconds/60,(int)seconds%60); //print remaining flags, difftime returns difference between two times
             draw();                 //redraw with new time
             puts("Please enter your move in the form of ( row col action )");
-            seconds = difftime(timeNow,timeStart);  //update time counter for the next iteration
+            secondsPassed = difftime(timeNow,timeStart);  //update time counter for the next iteration
             Sleep(1000);    //to avoid multiple simultaneous redraw
         }
 
@@ -238,6 +289,7 @@ void unmarkCell(int row, int col) {
     }
 
 }
+
 void win () {
     int i,j;
         for (i = 0 ; i < r ; i++) { //Flagging mines.
@@ -247,8 +299,10 @@ void win () {
             }
         }
         clearScreen();
-        printf("\n    Moves: %d\t Flags: %d\t Question Marks: %d\t Time: %.f\n\n",moves,flags,questions,timePassed + difftime(timeNow,timeStart)); //print remaining flags, difftime returns difference between two times
+        double seconds = timePassed + difftime(timeNow,timeStart);
+        printf("\n    Moves: %d\t Flags: %d\t Question Marks: %d\t Time: %2d:%2.2d\n\n",moves,flags,questions,(int)seconds/60,(int)seconds%60); //print remaining flags, difftime returns difference between two times
         draw();
+        printWonAscii();
         getScore();
 }
 void lose() {
@@ -274,9 +328,13 @@ void lose() {
         }
     }
     //TODO : FLASH
+    clearScreen();
+    double seconds = timePassed + difftime(timeNow,timeStart);
+    printf("\n    Moves: %d\t Flags: %d\t Question Marks: %d\t Time: %2d:%2.2d\n\n",moves,flags,questions,(int)seconds/60,(int)seconds%60); //print remaining flags, difftime returns difference between two times
     draw();
-    puts("Hit enter to return to the main menu.");
-    getchar();
+    printLostAscii();
+    puts("Press any key to return to main menu.");
+    getch();
 }
 
 void play(double timeAlreadyPassed,int localInitialOpen){
@@ -294,7 +352,9 @@ void play(double timeAlreadyPassed,int localInitialOpen){
     {
     time(&timeNow); //get current time
     //double seconds = difftime(timeNow,timeStart);
-        clearScreen(); printf("\n    Moves: %d\t Flags: %d\t Question Marks: %d\t Time: %.f\n\n",moves,flags,questions,timePassed + difftime(timeNow,timeStart)); //print remaining flags, difftime returns difference between two times
+        clearScreen();
+        double seconds = timePassed + difftime(timeNow,timeStart);
+        printf("\n    Moves: %d\t Flags: %d\t Question Marks: %d\t Time: %2d:%2.2d\n\n",moves,flags,questions,(int)seconds/60,(int)seconds%60); //print remaining flags, difftime returns difference between two times
         draw();
         if(wrongInput){
             puts("Wrong entry.");
@@ -350,12 +410,16 @@ void play(double timeAlreadyPassed,int localInitialOpen){
 }
 
 void Game(void){
-
+    system("MODE 80, 35");
     do
     {
         clearScreen();
-        printTitle();
-        printf("\n\t1. Start a new game     (n)\n\t2. Load a previous game (l)\n\t3. Exit                 (x)\n\n\tType the letter for the desired option: ");
+        printTitleAscii();
+        printf("\n\t1. Start a new game     (n)\
+               \n\t2. Load a previous game (l)\
+               \n\t3. Leaderboard          (b)\
+               \n\t4. Exit                 (x)\
+               \n\n\tType the letter for the desired option: ");
         char input;
         fflush(stdin);
         scanf("%c",&input);
@@ -375,6 +439,11 @@ void Game(void){
             load();
             break;
         }
+        case 'b':
+            {
+                displayLeaderboard(-1);
+                break;
+            }
         case 'x':
             return;
             break;
@@ -459,6 +528,7 @@ void textColor(char * ForeColor, char* BackColor){
     else if (ForeColor == "CYAN") f = 11;
     else if (ForeColor == "RED") f = 12;
     else if (ForeColor == "LIGHT_MAGENTA") f = 13;
+    else if (ForeColor == "BRIGHT_WHITE") f = 15;
 
     if (BackColor == "DEFAULT") b=0;
     if (BackColor == "GREY") b=128;
