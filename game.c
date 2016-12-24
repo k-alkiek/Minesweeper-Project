@@ -11,7 +11,7 @@
 #include "scores.h"
 
 #define CELL(row,col) grid[row][col]
-#define IDLE_TIME 50
+#define IDLE_TIME 60
 
 
 char message[100];
@@ -105,9 +105,7 @@ bool validAction(char input) {
         case 'q':
         case '?':
         case 'U':
-        case 'u':
-        case 'S':
-        case 's': return 1;
+        case 'u': return 1;
         default : return 0;
     }
 
@@ -194,11 +192,11 @@ void openCell(int row, int col) {
                     flagsAround++;
             }
         }
-        if (flagsAround == CELL(row,col).number)
+        if (flagsAround >= CELL(row,col).number)
             openEmptyCell(row, col);
         else {
             messageFlag = 1;
-            strcpy(message, "The cell is already opened.");
+            strcpy(message, "Not enough flags around this cell to open.");
         }
         return;
     }
@@ -327,7 +325,6 @@ void lose() {
             else CELL(i,j).show = ' ';
         }
     }
-    //TODO : FLASH
     clearScreen();
     double seconds = timePassed + difftime(timeNow,timeStart);
     printf("\n    Moves: %d\t Flags: %d\t Question Marks: %d\t Time: %2d:%2.2d\n\n",moves,flags,questions,(int)seconds/60,(int)seconds%60); //print remaining flags, difftime returns difference between two times
@@ -351,7 +348,6 @@ void play(double timeAlreadyPassed,int localInitialOpen){
     do
     {
     time(&timeNow); //get current time
-    //double seconds = difftime(timeNow,timeStart);
         clearScreen();
         double seconds = timePassed + difftime(timeNow,timeStart);
         printf("\n    Moves: %d\t Flags: %d\t Question Marks: %d\t Time: %2d:%2.2d\n\n",moves,flags,questions,(int)seconds/60,(int)seconds%60); //print remaining flags, difftime returns difference between two times
@@ -365,7 +361,8 @@ void play(double timeAlreadyPassed,int localInitialOpen){
             messageFlag = 0 ;
         }
 
-        puts("Please enter your move in the form of ( row col action )");
+        printf("Please enter your move in the form of (row column action)\
+             \nActions: Open(o)  Flag(f)  Question Mark(q)  Save(s)  Exit(x)\n");
 
         isIdle = 1;     //launch thread loop
         pthread_t idleThread;       //pthread stuff
@@ -373,10 +370,35 @@ void play(double timeAlreadyPassed,int localInitialOpen){
 
         rowIn = -1 ; colIn = -1; action = 'z';  //invalid values
 
-
-        scanf("%d %d %c", &rowIn, &colIn, &action); //TODO: Adjust input method for saving
-        isIdle = 0;
         fflush(stdin);
+        char inputString[12];
+        fgets(inputString,11,stdin);
+        inputString[strlen(inputString)-1] = '\0';
+
+        if ( !strcmp(inputString,"s")  || !strcmp(inputString,"S") || !strcmp(inputString,"save") || !strcmp(inputString,"Save") ){
+                save();
+                isIdle = 0;
+        }
+        else if ( !strcmp(inputString,"x")  || !strcmp(inputString,"X") || !strcmp(inputString,"exit") || !strcmp(inputString,"Exit") ){
+                char confirm;
+                puts("Do you really want to quit without saving ?");
+                puts("Save and exit       \t(s)");
+                puts("Exit without saving \t(x)");
+                puts("Cancel              \t(c)");
+                fflush(stdin);
+                confirm = getch();
+
+                switch(confirm){
+                    case 's':{save();}
+                    case 'x':{isIdle = 0; return;}
+                    default :{break;}
+                }
+        }
+        else{
+            sscanf(inputString,"%d %d %c", &rowIn, &colIn, &action); //TODO: Adjust input method for saving
+            isIdle = 0;
+
+
         if ( !( inRange(r,rowIn) && inRange(c, colIn) && validAction(action) ) ){
             wrongInput = 1;
             continue;
@@ -391,15 +413,14 @@ void play(double timeAlreadyPassed,int localInitialOpen){
             case 'q': {questionCell(rowIn, colIn); break;}
             case 'U':
             case 'u': {unmarkCell(rowIn, colIn); break;}
-            case 'S':  // add functions later
-            case 's': {save();break;}
+        }
+        moves++;
     }
-    moves++;
 
+    isIdle = 0;
+    fflush(stdin);
 
-        // Input validation implemented like a boss B-)
-    }
-    while (gameState==playing);
+    }while (gameState==playing);
 
     if (gameState == won) {
         win();
@@ -410,16 +431,20 @@ void play(double timeAlreadyPassed,int localInitialOpen){
 }
 
 void Game(void){
-    system("MODE 80, 35");
+
+    int loadTrial = 0;
     do
     {
+        system("MODE 80, 35");
         clearScreen();
         printTitleAscii();
-        printf("\n\t1. Start a new game     (n)\
-               \n\t2. Load a previous game (l)\
-               \n\t3. Leaderboard          (b)\
-               \n\t4. Exit                 (x)\
-               \n\n\tType the letter for the desired option: ");
+        printf("\n\t1. Start a new game.    \t(n)\
+               \n\t2. Load a previous game.\t(l)\
+               \n\t3. Leaderboard.         \t(b)\
+               \n\t4. Exit.                \t(x)");
+        if(loadTrial) {printf("\n\n\t No existing game to load."); loadTrial = 0;}
+        printf("\n\t Type the letter for the desired option: ");
+
         char input;
         fflush(stdin);
         scanf("%c",&input);
@@ -437,6 +462,7 @@ void Game(void){
         case 'l':
         {
             load();
+            loadTrial = 1;
             break;
         }
         case 'b':

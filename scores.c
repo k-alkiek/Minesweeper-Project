@@ -32,7 +32,7 @@ long getName (int i){
     char ch;
     char name[35];
     int c = 0;
-    while ( (name[c++] = ch = fgetc(load)) != ':');
+    while ( (name[c++] = ch = fgetc(load)) != '~');
     name[c] = '\0';
     strcpy(topPlayer[i].name,name);
     long tell = ftell(load);
@@ -64,8 +64,10 @@ void saveTopPlayers(){
 
 void loadTopPlayers(){
     FILE * loader = fopen("HighScores.txt","rt");
-    if (loader==NULL)
-        puts("Error loading scores.");
+    if (loader==NULL){
+        clearLeaderboard();
+        saveTopPlayers();
+    }
     else{
         int i, success;
         long loaderPosition;
@@ -103,7 +105,7 @@ void getScore() {
         //playerName[strlen(playerName) - 1] = '\0';  //fgets saves \n in the string
 
         playerName[31] = '\0';  //insert null at the end
-        strcat(playerName, ":");                    //add colon for saving format
+        strcat(playerName, "~");                    //add colon for saving format
         int i;
         //loadTopPlayers();
 
@@ -148,12 +150,12 @@ void displayLeaderboard(int currentPlayer){
     }
     printf("\t+-------------------------------------------------------+\n");
 
-    puts("Press 'c' to clear leaderboard or enter to return to main menu.");
+    printf("\n\tPress 'c' to clear leaderboard or enter to return to main menu.\n\t");
 
     char action = getch();
 
     if (action == 'c' || action == 'C'){
-        puts("Are you sure you want to clear the leaderboard? (y/n)");
+        printf("Are you sure you want to clear the leaderboard? (y/n)\n\t");
         char confirm = getch();
         if(confirm == 'Y' || confirm == 'y')
             clearLeaderboard();
@@ -163,7 +165,7 @@ void displayLeaderboard(int currentPlayer){
 
 void clearLeaderboard(){
     struct player blank;
-    strcpy(blank.name,"_______________________________:");
+    strcpy(blank.name,"_______________________________~");
     blank.score = 0;
     int i;
     for(i=0; i<10; i++){
