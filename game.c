@@ -395,9 +395,8 @@ void play(double timeAlreadyPassed,int localInitialOpen){
                 }
         }
         else{
-            sscanf(inputString,"%d %d %c", &rowIn, &colIn, &action); //TODO: Adjust input method for saving
+            sscanf(inputString,"%d %d %c", &rowIn, &colIn, &action);
             isIdle = 0;
-
 
         if ( !( inRange(r,rowIn) && inRange(c, colIn) && validAction(action) ) ){
             wrongInput = 1;
@@ -440,10 +439,10 @@ void Game(void){
         printTitleAscii();
         printf("\n\t1. Start a new game.    \t(n)\
                \n\t2. Load a previous game.\t(l)\
-               \n\t3. Leaderboard.         \t(b)\
+               \n\t3. Highscores.          \t(H)\
                \n\t4. Exit.                \t(x)");
         if(loadTrial) {printf("\n\n\t No existing game to load."); loadTrial = 0;}
-        printf("\n\t Type the letter for the desired option: ");
+        printf("\n\t Type the letter or number for the desired option: ");
 
         char input;
         fflush(stdin);
@@ -452,6 +451,8 @@ void Game(void){
         {
 
         case 'n':
+        case 'N':
+        case '1':
         {
             clearScreen();
             getSize();
@@ -460,19 +461,25 @@ void Game(void){
             break;
         }
         case 'l':
+        case 'L':
+        case '2':
         {
             load();
             loadTrial = 1;
             break;
         }
-        case 'b':
+        case 'h':
+        case 'H':
+        case '3':
             {
                 displayLeaderboard(-1);
                 break;
             }
         case 'x':
+        case 'X':
+        case '4':
             return;
-            break;
+        break;
         default :
         {
             clearScreen();
@@ -506,7 +513,7 @@ void save(){
         }
         if (CELL(r,c).show == ' ')
                     CELL(r,c).show = 's';
-                fflush(fp);         //TODO later
+                fflush(fp);
                 fprintf(fp,"%d %d %d %d %d %c\n",CELL(r,c).discovered,CELL(r,c).mined,CELL(r,c).number,CELL(r,c).flagged,CELL(r,c).question,CELL(r,c).show);
 
 

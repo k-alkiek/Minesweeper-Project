@@ -94,18 +94,33 @@ void getScore() {
     }
     else{
         puts("You got a highscore!");
+        int a=0;
+        int repeat = 0;
         puts("Enter your name: ");
-        fgets(playerName,32,stdin);
+        do {
+        if (repeat) {
+            puts("Special character used. Please, enter your name again :");
+            repeat = 0;
+        }
 
-        int a=0;        //get the name then fill the rest of the string with spaces for display format purposes
+        fgets(playerName,32,stdin); //Get the player's name.
+
+        for (a = 0 ; a <= strlen(playerName) ; a++) {
+            if (playerName[a] == '~') {
+                repeat = 1;
+                break;
+            }
+        }
+        } while(repeat);
+        //get the name then fill the rest of the string with spaces for display format purposes.
         for(a=strlen(playerName) - 1; a<31; a++){
             playerName[a] = ' ';
         }
 
-        //playerName[strlen(playerName) - 1] = '\0';  //fgets saves \n in the string
+        //playerName[strlen(playerName) - 1] = '\0';  //fgets saves \n in the string.
 
         playerName[31] = '\0';  //insert null at the end
-        strcat(playerName, "~");                    //add colon for saving format
+        strcat(playerName, "~");                    //add colon for saving format.
         int i;
         //loadTopPlayers();
 

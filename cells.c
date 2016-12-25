@@ -15,16 +15,14 @@ void getSize() {
 
     int invalidInput = 0;
     do{
-        // Add "Wrong entry" and clear screen
     puts("Please enter the grid dimensions in the form of : (rows columns)");
     if (invalidInput) puts("Invalid input. dimensions are of minimum 2x2 and maximum 30x30");
+    r = 0;
     fflush(stdin);
     scanf("%d %d", &r, &c);
     invalidInput = 1;
     clearScreen();
     }while(r<2 || r>MAX_SIZE || c<2 || c>MAX_SIZE);
-         //get number of mines in the game
-
 
     if(c>28) system("MODE 130,35");
     else if(c>25) system("MODE 120, 35");
@@ -116,7 +114,7 @@ void ColorPrintChar(char c){
     CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
 
     int f=0,b=0;
-    switch(c){  //TODO: add cases for gameOver grid
+    switch(c){
 
         case 'X':{ f=15; b=128; break;}
         case ' ':{ f=7;  b=0;   break;}

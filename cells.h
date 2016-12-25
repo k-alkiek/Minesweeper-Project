@@ -1,7 +1,7 @@
 #ifndef CELLSHEADER
 #define CELLSHEADER
 
-int r,c,mines; //rows and columns
+int r,c,mines; //rows, columns and mines.
 
 struct cell{
     int discovered;

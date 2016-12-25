@@ -62,16 +62,16 @@
 	<stdbool.h>
 	<time.h>
 
-1482403562 source:c:\users\a2hp11\desktop\minesweeper\cells.c
+1482668148 source:c:\users\a2hp11\desktop\minesweeper\cells.c
 	<stdio.h>
 	<stdlib.h>
 	<windows.h>
 	<time.h>
 	"cells.h"
 
-1482397144 c:\users\a2hp11\desktop\minesweeper\cells.h
+1482668443 c:\users\a2hp11\desktop\minesweeper\cells.h
 
-1482411333 source:c:\users\a2hp11\desktop\minesweeper\game.c
+1482644236 source:c:\users\a2hp11\desktop\minesweeper\game.c
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
@@ -123,13 +123,14 @@
 
 1482423918 c:\users\khaled\desktop\minesweeper project\scores.h
 
-1482401805 source:c:\users\a2hp11\desktop\minesweeper\scores.c
+1482668443 source:c:\users\a2hp11\desktop\minesweeper\scores.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
+	<windows.h>
 	"game.h"
 	"scores.h"
 	"cells.h"
 
-1482397144 c:\users\a2hp11\desktop\minesweeper\scores.h
+1482427203 c:\users\a2hp11\desktop\minesweeper\scores.h
 
