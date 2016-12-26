@@ -56,7 +56,7 @@ void draw() {
             printf("%2d ", i);   //print row number
         for (j = 0 ; j < c ; j++ ) {
             if(j==0) printf("|"); //print first vertical break in the row
-            ColorPrintChar(CELL(i,j).show);
+            colorPrintChar(CELL(i,j).show);
             printf("|");
         }
         printf("\n"); //new line after each row
@@ -71,7 +71,6 @@ void draw() {
 
 
 void putBlank(int row, int col){
-//    grid[row][col] = { 0, 0, 0, 0, 0, 'X'};
     CELL(row,col).discovered = 0;
     CELL(row,col).mined = 0;
     CELL(row,col).number = 0;
@@ -109,7 +108,7 @@ void putNumbers(){
     }
 }
 
-void ColorPrintChar(char c){
+void colorPrintChar(char c){
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
 

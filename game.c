@@ -117,7 +117,7 @@ void clearScreen(void){
     return;
 }
 
-void* idleTimer(void){  //function pointer for the idle thread
+void* idleTimer(void){
     double secondsPassed = difftime(timeNow,timeStart);   //time counter initialized to current time
     while(isIdle){      //isIdle is set to true before input and set to false after input
         time(&timeNow);
@@ -128,7 +128,8 @@ void* idleTimer(void){  //function pointer for the idle thread
             double seconds = timePassed + difftime(timeNow,timeStart);
             printf("\n    Moves: %d\t Flags: %d\t Question Marks: %d\t Time: %2d:%2.2d\n\n",moves,flags,questions,(int)seconds/60,(int)seconds%60); //print remaining flags, difftime returns difference between two times
             draw();                 //redraw with new time
-            puts("Please enter your move in the form of ( row col action )");
+            printf("Please enter your move in the form of (row column action)\
+             \nActions: Open(o)  Flag(f)  Question Mark(q)  Unmark(u)  Save(s)  Exit(x)\n");
             secondsPassed = difftime(timeNow,timeStart);  //update time counter for the next iteration
             Sleep(1000);    //to avoid multiple simultaneous redraw
         }
@@ -308,7 +309,7 @@ void lose() {
     for (i = 0 ; i < boom ; i++) {
         CELL((detonations[i].row),(detonations[i].col)).show = '!';
     }
-    //Detonated mines marked with '!'.
+    // Detonated mines marked with '!'.
     for (i = 0 ; i < r ; i++) {
         for (j = 0 ; j < c ; j++) {
             if (CELL(i,j).show == '!')
@@ -362,7 +363,7 @@ void play(double timeAlreadyPassed,int localInitialOpen){
         }
 
         printf("Please enter your move in the form of (row column action)\
-             \nActions: Open(o)  Flag(f)  Question Mark(q)  Save(s)  Exit(x)\n");
+             \nActions: Open(o)  Flag(f)  Question Mark(q)  Unmark(u)  Save(s)  Exit(x)\n");
 
         isIdle = 1;     //launch thread loop
         pthread_t idleThread;       //pthread stuff
@@ -390,7 +391,7 @@ void play(double timeAlreadyPassed,int localInitialOpen){
 
                 switch(confirm){
                     case 's':{save();}
-                    case 'x':{isIdle = 0; return;}
+                    case 'x':{isIdle = 0; moves = 0; flags = 0; questions = 0; return;}
                     default :{break;}
                 }
         }
@@ -515,8 +516,6 @@ void save(){
                     CELL(r,c).show = 's';
                 fflush(fp);
                 fprintf(fp,"%d %d %d %d %d %c\n",CELL(r,c).discovered,CELL(r,c).mined,CELL(r,c).number,CELL(r,c).flagged,CELL(r,c).question,CELL(r,c).show);
-
-
     }
 }
 

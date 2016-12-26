@@ -8,77 +8,6 @@
 #include "cells.h"
 
 
-
-void insertScore(char* playerName,int score,int i){
-
-    int c;
-    for (c = 8 ; c >= i ; c--) {
-        //topPlayer[c+1] = topPlayer[c];
-        strcpy(topPlayer[c+1].name,topPlayer[c].name);
-        topPlayer[c+1].score = topPlayer[c].score;
-    }
-    strcpy(topPlayer[i].name,playerName);
-    topPlayer[i].score = score;
-}
-
-long getName (int i){
-    char buffer[50];
-    FILE * load = fopen("HighScores.txt","rt");
-    int l = 2*i;
-    while (l){
-        fgets(buffer,100, load ) ;
-        l--;
-    }
-    char ch;
-    char name[35];
-    int c = 0;
-    while ( (name[c++] = ch = fgetc(load)) != '~');
-    name[c] = '\0';
-    strcpy(topPlayer[i].name,name);
-    long tell = ftell(load);
-    fclose(load);
-    return tell;
-}
-
-void saveTopPlayers(){
-    //DEBUG
-    struct player debugArr[11];
-    int i;
-    for(i=0; i<10; i++){
-        strcpy(debugArr[i].name,topPlayer[i].name);
-        debugArr[i].score = topPlayer[i].score;
-    }
-
-    FILE * saver = fopen("HighScores.txt","wt");
-    if (saver==NULL)
-        puts("Error loading scores.");
-    else{
-        int i;
-        for (i = 0 ; i < 10 ; i++) {
-            fflush(saver);
-            fprintf(saver,"%s\n%d\n", topPlayer[i].name, topPlayer[i].score);
-        }
-    }
-    fclose(saver);
-}
-
-void loadTopPlayers(){
-    FILE * loader = fopen("HighScores.txt","rt");
-    if (loader==NULL){
-        clearLeaderboard();
-        saveTopPlayers();
-    }
-    else{
-        int i, success;
-        long loaderPosition;
-        for (i = 0 ; i < 10 ; i++) {
-            loaderPosition = getName(i);
-            fseek(loader, loaderPosition, 0);
-            success = fscanf(loader, "%d", &topPlayer[i].score);
-        }
-    }
-}
-
 void getScore() {
 
     loadTopPlayers();
@@ -138,6 +67,73 @@ void getScore() {
     }
 }
 
+void insertScore(char* playerName,int score,int i){
+
+    int c;
+    for (c = 8 ; c >= i ; c--) {
+        strcpy(topPlayer[c+1].name,topPlayer[c].name);
+        topPlayer[c+1].score = topPlayer[c].score;
+    }
+    strcpy(topPlayer[i].name,playerName);
+    topPlayer[i].score = score;
+}
+
+long getName (int i){
+    char buffer[50];
+    FILE * load = fopen("HighScores.txt","rt");
+    int l = 2*i;
+    while (l){
+        fgets(buffer,100, load ) ;
+        l--;
+    }
+    char ch;
+    char name[35];
+    int c = 0;
+    while ( (name[c++] = ch = fgetc(load)) != '~');
+    name[c] = '\0';
+    strcpy(topPlayer[i].name,name);
+    long tell = ftell(load);
+    fclose(load);
+    return tell;
+}
+
+void saveTopPlayers(){
+    struct Player debugArr[11];
+    int i;
+    for(i=0; i<10; i++){
+        strcpy(debugArr[i].name,topPlayer[i].name);
+        debugArr[i].score = topPlayer[i].score;
+    }
+
+    FILE * saver = fopen("HighScores.txt","wt");
+    if (saver==NULL)
+        puts("Error loading scores.");
+    else{
+        int i;
+        for (i = 0 ; i < 10 ; i++) {
+            fflush(saver);
+            fprintf(saver,"%s\n%d\n", topPlayer[i].name, topPlayer[i].score);
+        }
+    }
+    fclose(saver);
+}
+
+void loadTopPlayers(){
+    FILE * loader = fopen("HighScores.txt","rt");
+    if (loader==NULL){
+        clearLeaderboard();
+        saveTopPlayers();
+    }
+    else{
+        int i, success;
+        long loaderPosition;
+        for (i = 0 ; i < 10 ; i++) {
+            loaderPosition = getName(i);
+            fseek(loader, loaderPosition, 0);
+            success = fscanf(loader, "%d", &topPlayer[i].score);
+        }
+    }
+}
 
 void displayLeaderboard(int currentPlayer){
 
@@ -179,7 +175,7 @@ void displayLeaderboard(int currentPlayer){
 }
 
 void clearLeaderboard(){
-    struct player blank;
+    struct Player blank;
     strcpy(blank.name,"_______________________________~");
     blank.score = 0;
     int i;
