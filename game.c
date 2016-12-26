@@ -346,6 +346,18 @@ void play(double timeAlreadyPassed,int localInitialOpen){
     gameState = playing;
     mines = 1+(r*c)/10;
 
+    int x =85,y=35; //default size for the terminal
+    if (c>18)       // resize only at certain threshold
+        x = 85+4*(c-18);
+    if (r>12)
+        y = 35+2*(r-12);
+    char statement[16] = {"Mode "};//string to pass for the system function
+    char sizes[10];
+    sprintf(sizes,"%d, %d",x,y);//prints the x and y values as a string
+    strcat(statement,sizes);     //assemble the statement to pass to system
+    system(statement);
+
+
     do
     {
     time(&timeNow); //get current time
@@ -435,7 +447,7 @@ void Game(void){
     int loadTrial = 0;
     do
     {
-        system("MODE 80, 35");
+        system("MODE 85, 35");
         clearScreen();
         printTitleAscii();
         printf("\n\t1. Start a new game.    \t(n)\

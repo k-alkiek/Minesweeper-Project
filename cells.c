@@ -24,10 +24,6 @@ void getSize() {
     clearScreen();
     }while(r<2 || r>MAX_SIZE || c<2 || c>MAX_SIZE);
 
-    if(c>28) system("MODE 130,35");
-    else if(c>25) system("MODE 120, 35");
-    else if (c>20) system("MODE 110, 35");
-    else if(c>23) system("MODE 100, 35");
 }
 
 
