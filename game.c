@@ -16,6 +16,7 @@
 
 char message[100];
 bool messageFlag = 0;
+int loadError = 0;
 
 char * titleAscii[] =  {"  __  __  _                     ____                                         ",
                    " |  \\/  |(_) _ __    ___ __/\\__/ ___|__      __ ___   ___  _ __    ___  _ __ ",
@@ -345,6 +346,7 @@ void play(double timeAlreadyPassed,int localInitialOpen){
     timePassed = timeAlreadyPassed;
     gameState = playing;
     mines = 1+(r*c)/10;
+    loadError = 0;
 
     int x =85,y=35; //default size for the terminal
     if (c>18)       // resize only at certain threshold
@@ -444,17 +446,18 @@ void play(double timeAlreadyPassed,int localInitialOpen){
 
 void Game(void){
 
-    int loadTrial = 0;
     do
     {
         system("MODE 85, 35");
         clearScreen();
         printTitleAscii();
-        printf("\n\t1. Start a new game.    \t(n)\
+        printf("\n\tMade as a project by Khaled Barie & Hesham Medhat for CS121 course\
+               \n\t1. Start a new game.    \t(n)\
                \n\t2. Load a previous game.\t(l)\
                \n\t3. Highscores.          \t(H)\
-               \n\t4. Exit.                \t(x)");
-        if(loadTrial) {printf("\n\n\t No existing game to load."); loadTrial = 0;}
+               \n\t4. Exit.                \t(x)\n");
+        if(loadError) {printf("\n\n\t No existing game to load.");}
+        loadError = 0;
         printf("\n\t Type the letter or number for the desired option: ");
 
         char input;
@@ -477,8 +480,9 @@ void Game(void){
         case 'L':
         case '2':
         {
+            loadError = 1;
             load();
-            loadTrial = 1;
+
             break;
         }
         case 'h':
@@ -496,7 +500,7 @@ void Game(void){
         default :
         {
             clearScreen();
-            printf("Invalid entry. Please, try again\n");
+            printf("Don't step on th mines ;)\n");
             break;
         }
 
@@ -534,9 +538,7 @@ void save(){
 void load() {
     FILE* fp = fopen("save.txt","rt");
 
-    if(fp==NULL)
-        puts("Error loading file.");
-    else{
+    if(fp!=NULL){
 
         double loadedTimePassed; int loadedinitialOpen;
         fscanf(fp,"%d %d %lf %d %d %d %d",&r,&c,&loadedTimePassed,&moves,&flags,&questions,&loadedinitialOpen);

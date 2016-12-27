@@ -12,6 +12,7 @@ double timePassed;
 bool isIdle;
 int boom;
 
+
 struct DETONATIONS {
     int row;
     int col;
