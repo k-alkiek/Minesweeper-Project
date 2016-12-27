@@ -451,7 +451,7 @@ void Game(void){
         system("MODE 85, 35");
         clearScreen();
         printTitleAscii();
-        printf("\n\tMade as a project by Khaled Barie & Hesham Medhat for CS121 course\
+        printf("\n\tMade as a project by Khaled Barie & Hesham Medhat for CS121 course.\
                \n\t1. Start a new game.    \t(n)\
                \n\t2. Load a previous game.\t(l)\
                \n\t3. Highscores.          \t(H)\
@@ -500,7 +500,7 @@ void Game(void){
         default :
         {
             clearScreen();
-            printf("Don't step on th mines ;)\n");
+            printf("Don't step on the mines ;)\n"); /* That's our easter egg */
             break;
         }
 
@@ -533,6 +533,7 @@ void save(){
                 fflush(fp);
                 fprintf(fp,"%d %d %d %d %d %c\n",CELL(r,c).discovered,CELL(r,c).mined,CELL(r,c).number,CELL(r,c).flagged,CELL(r,c).question,CELL(r,c).show);
     }
+    fclose(fp);
 }
 
 void load() {
@@ -552,6 +553,7 @@ void load() {
         }
     play(loadedTimePassed, loadedinitialOpen);
     }
+    fclose(fp);
 
 }
 void textColor(char * ForeColor, char* BackColor){

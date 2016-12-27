@@ -133,6 +133,7 @@ void loadTopPlayers(){
             success = fscanf(loader, "%d", &topPlayer[i].score);
         }
     }
+    fclose(loader);
 }
 
 void displayLeaderboard(int currentPlayer){
